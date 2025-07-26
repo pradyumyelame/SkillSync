@@ -89,5 +89,5 @@ By leveraging the **powerful Google Gemini API**, it analyzes your resume agains
 
 ---
 
-## 📂 **Folder Structure (Important)**
+
 
