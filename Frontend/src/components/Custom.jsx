@@ -7,7 +7,7 @@ import * as pdfjsLib from 'pdfjs-dist/build/pdf';
 
 // This is a placeholder for your Body component.
 // If you don't have this file, you can remove this import and the <Body /> tag below.
-import Body from './Body';
+
 
 // ✅ FIXED: Set up the worker for pdf.js to dynamically match the installed library version.
 pdfjsLib.GlobalWorkerOptions.workerSrc = `//cdnjs.cloudflare.com/ajax/libs/pdf.js/${pdfjsLib.version}/pdf.worker.min.mjs`;

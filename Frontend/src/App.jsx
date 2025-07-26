@@ -10,10 +10,10 @@ import React from "react";
 import Slider from "react-slick";
 import "slick-carousel/slick/slick.css";
 import "slick-carousel/slick/slick-theme.css";
-import SlickImgSlide from "./components/SlickImgSlide"; // Import the new component
-import ImageSlider from "./components/ImageSlider";
-import { SliderData } from "./components/SliderData";
-import { SlidesData } from "./components/SlidesData";
+// import SlickImgSlide from "./components/SlickImgSlide"; // Import the new component
+// import ImageSlider from "./components/ImageSlider";
+// import { SliderData } from "./components/SliderData";
+// import { SlidesData } from "./components/SlidesData";
 import Custom from "./components/Custom";
 
 function App() {
