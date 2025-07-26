@@ -1,20 +1,18 @@
-# 🚀 Skill Sync: AI-Powered Resume Analyzer
+# 🚀 Skill Sync: AI-Powered Resume Analyzer & Resume Builder
 
-### 🔍 Optimize Your Resume. Beat the Bots. Get the Interview.
+### 🔍 Optimize Your Resume. Build Smart. Apply Confidently.
 
 ---
 
 ## 🧠 **Overview**
 
-**Skill Sync** is an intelligent and sleek web application designed to help **job seekers** optimize their resumes for **specific job roles**. By leveraging the **powerful Google Gemini API**, it performs a deep analysis of your resume against job descriptions and provides:
+**Skill Sync** is an intelligent and sleek web application designed to help **job seekers**:
 
-- A real-time **Applicant Tracking System (ATS) score**
-- A detailed **AI-powered evaluation**
-- **Actionable suggestions** for improvement
+- ✨ Optimize their resumes for **specific job roles**
+- ✍️ Build new resumes/CVs from scratch
+- 📥 Download a tailored PDF version instantly
 
-Our goal is simple:  
-➡️ **Demystify the hiring process**  
-➡️ **Empower applicants** to land their dream jobs with precision-crafted resumes.
+By leveraging the **powerful Google Gemini API**, it analyzes your resume against job descriptions and provides real-time feedback and improvement suggestions.
 
 ---
 
@@ -24,35 +22,44 @@ Our goal is simple:
   Upload your resume and paste the job description to receive an **instant compatibility score**, simulating how an ATS ranks your resume.
 
 - 🤖 **AI-Powered Resume Analysis**  
-  Get an **intelligent breakdown** of your strengths, weaknesses, and relevance to the job role.
+  Get a **deep AI evaluation** of strengths, weaknesses, keyword coverage, and relevance to the role.
 
-- ✍️ **Personalized Suggestions**  
-  Receive **targeted, actionable tips** — rephrase bullet points, highlight key experiences, and showcase your strengths.
+- ✍️ **Resume Builder (Form-Based)**  
+  Fill out a simple form with personal, educational, and experience details — and **generate a professional resume** instantly.
 
-- 🧩 **Keyword Analysis**  
-  Extracts the **most crucial keywords and skills** from the job description, helping you **mirror recruiter expectations**.
+- 🧾 **CV Generator**  
+  Input academic and research-related information to build a **research-focused CV** for universities or job roles.
+
+- 📥 **Download as PDF**  
+  Both AI-analyzed and manually-built resumes/CVs can be downloaded in **PDF format** for easy submission.
+
+- 💡 **Actionable Suggestions**  
+  AI provides **smart edits, highlights, and keyword suggestions** to improve resume alignment with the job role.
+
+- 🔍 **Keyword Analysis**  
+  Extract critical keywords and skills from the job description to make your resume **ATS-optimized**.
 
 - 🎯 **User-Friendly Interface**  
-  Fast, clean, and intuitive — designed for **maximum efficiency** and **minimum effort**.
+  Modern, clean, and responsive interface that makes resume creation and analysis smooth and intuitive.
 
 ---
 
 ## ⚙️ **How It Works**
 
+### 🧠 Resume Analyzer
 1. 📝 **Paste Job Description**  
-   Copy and paste the **entire job description** you're targeting.
+2. 📄 **Upload Your Resume (.pdf)**  
+3. 🔍 **Analyze with Gemini API**  
+4. ✅ **Receive Score, Insights, and Suggestions**  
+5. 🎯 **Edit and Re-upload for Better Results**
 
-2. 📄 **Upload Resume**  
-   Upload your **PDF resume**. We extract and process the content with precision.
-
-3. ⚡ **Get Instant Analysis**  
-   Click **“Analyze”** and let the AI work its magic! Within seconds, you'll get:
-   - ✅ **ATS Score**
-   - 🧠 **Strengths & Weaknesses Summary**
-   - 💡 **Improvement Suggestions**
-
-4. 🎨 **Optimize & Apply**  
-   Update your resume using the **keyword insights and AI suggestions**, tailor it perfectly — then **go get that job!**
+### 🛠️ Resume Builder / CV Generator
+1. 🧑‍💼 **Enter Required Details**  
+   - Name, Contact, Objective, Education, Skills, Experience, Certifications, Projects, etc.
+2. 🎨 **Choose Format/Template**  
+   - Pick a layout/style (coming soon)
+3. 📥 **Download as PDF**  
+   - Professionally styled output, **ready to send** with one click
 
 ---
 
@@ -64,34 +71,23 @@ Our goal is simple:
 | **Backend**  | Node.js, Express.js             |
 | **Database** | MongoDB                         |
 | **AI Engine**| Google Gemini API (LLM-powered) |
+| **PDF Export** | html2pdf, jsPDF, Puppeteer     |
 
 ---
 
-## 🚀 **Why Skill Sync Stands Out**
+## 🛠️ **Required Fields for Resume Builder**
 
-✅ **Fast and Powerful**: Built for real-time analysis  
-✅ **Precision AI**: Harnesses the next-gen Gemini API  
-✅ **Customization First**: Tailors suggestions for your target role  
-✅ **Built for Job Seekers**: Whether you're a fresher or a pro — Skill Sync is your secret weapon  
-
----
-
-## 📦 **Future Enhancements (Coming Soon!)**
-
-- 🧠 Integration with **OpenAI** as a fallback LLM option  
-- 🔒 Secure resume storage and history  
-- 📊 AI-driven **resume ranking dashboard** for multiple jobs  
-- 🌐 Deploy as a Chrome extension for **on-the-fly analysis** on LinkedIn/Indeed  
+| Section          | Required Fields                                                                 |
+|------------------|----------------------------------------------------------------------------------|
+| **Personal Info**| Full Name, Email, Phone Number, LinkedIn                                        |
+| **Education**    | Degree, Institution Name, Duration, Grade/Percentage                            |
+| **Experience**   | Job Title, Company, Duration, Responsibilities                                  |
+| **Projects**     | Title, Technologies Used, Description                                            |
+| **Skills**       | At least 5 technical skills (e.g., React, Node.js, MongoDB)                      |
+| **Certifications**| Course Name, Platform, Year of Completion                                      |
+| **Objective**    | 2-3 line professional summary or career objective                               |
 
 ---
 
-## 🤝 **Contribute or Try It Out**
+## 📂 **Folder Structure (Important)**
 
-If you're a developer, resume consultant, or job seeker — **this is built for you**.  
-Open an issue, contribute features, or just fork and customize it for your use case!
-
----
-
-## 💬 **Feedback & Support**
-
-📩 We welcome suggestions, improvements, and feature requests. Let’s build something that actually **makes a difference in people’s careers**.
