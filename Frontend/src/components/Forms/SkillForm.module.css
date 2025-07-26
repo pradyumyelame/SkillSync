@@ -1,0 +1,80 @@
+/* SkillForm.module.css */
+
+.formContainer {
+  margin-bottom: 20px;
+}
+
+.inputContainer {
+  display: flex;
+  align-items: center;
+  margin-bottom: 10px;
+}
+
+.input {
+  border: 1px solid #ccc;
+  outline: none;
+  padding: 10px 12px;
+  font-size: 1rem;
+  border-radius: 5px;
+  flex: 1;
+}
+
+.input:hover {
+  border: 1px solid #adadad;
+}
+
+.input:focus {
+  border: 1px solid #239ce2;
+}
+
+.btn {
+  display: inline-block;
+  padding: 10px 20px;
+  font-size: 16px;
+  font-weight: bold;
+  text-align: center;
+  text-decoration: none;
+  cursor: pointer;
+  border: 2px solid ;
+  color: #ffc107; /* text color */
+  background-color: #ffc107; /* background color */
+  border-radius: 5px;
+}
+
+.btn:hover {
+  background-color: #8beb90;
+}
+
+/* SkillForm.module.css */
+
+.skillContainer {
+  display: flex;
+  flex-wrap: wrap; /* Allow skills to wrap to the next row */
+  margin-bottom: 10px;
+}
+
+.skillBox {
+  background-color: #f0f0f0;
+  padding: 5px; /* Decrease padding */
+  border-radius: 8px; /* Decrease border radius */
+  margin-right: 5px; /* Decrease margin */
+  margin-bottom: 5px; /* Decrease margin */
+  display: inline-flex; /* Change to inline-flex */
+  align-items: center; /* Align items vertically */
+  font-size: 0.9rem; /* Decrease font size */
+}
+
+.skillText {
+  margin: 0;
+  white-space: normal; /* Allow text to wrap */
+  overflow: hidden;
+  text-overflow: ellipsis; /* Add ellipsis for overflow text */
+}
+
+.btnDelete {
+  margin-left: 5px; /* Decrease margin */
+  cursor: pointer;
+  background-color: transparent;
+  border: none;
+  font-size: 0.5rem; /* Decrease font size */
+}

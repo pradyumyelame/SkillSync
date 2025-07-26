@@ -1,0 +1,22 @@
+export const SliderData = [
+  {
+    image:
+      "https://wwwcdn.cincopa.com/blogres/wp-content/uploads/2018/12/Optimizing-User-Experience.jpg",
+  },
+  {
+    image:
+      "https://scenario77.com/wp-content/uploads/2019/09/Online-Reviews.jpg",
+  },
+  {
+    image:
+      "https://th.bing.com/th/id/OIP.CH9vvHGrCuW_aKhIO1z07AHaE8?w=880&h=587&rs=1&pid=ImgDetMain",
+  },
+  {
+    image:
+      "https://th.bing.com/th/id/OIP.YYx4MNJqt_PFRc1jit2IxQHaE8?w=1000&h=667&rs=1&pid=ImgDetMain",
+  },
+  {
+    image:
+      "https://www.jvimobile.com/wp-content/uploads/Depositphotos_71328467_l-2015_461369e5848dd18d63544b3a01360ad0_2000.jpg",
+  },
+];

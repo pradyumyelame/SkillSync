@@ -1,0 +1,16 @@
+@tailwind base;
+@tailwind components;
+@tailwind utilities;
+
+:root {
+  --dark-clr: "white";
+}
+
+.dark {
+  background-color: rgb(17 24 38);
+  color: white;
+}
+
+.slick-slide > div {
+  margin: 0 10px;
+}
