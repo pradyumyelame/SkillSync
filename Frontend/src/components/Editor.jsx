@@ -34,7 +34,7 @@ const Editor = () => {
     const handleSaveBasicInfo = async (data) => {
         try {
             // Send POST request to backend to save basic info
-            const response = await axios.post('http://localhost:5000/api/basicinfo', data); // Replace with your backend URL
+            const response = await axios.post('https://skillsync-yv17.onrender.com/api/basicinfo', data); // Replace with your backend URL
             console.log(response.data); // Log the response from backend
             setBasicInfo(data); // Update basicInfo state if save is successful
         } catch (error) {
@@ -45,7 +45,7 @@ const Editor = () => {
     useEffect(() => {
         const fetchBasicInfo = async () => {
             try {
-                const response = await axios.get('http://localhost:5000/api/basicinfo');
+                const response = await axios.get('https://skillsync-yv17.onrender.com/api/basicinfo');
                 setBasicInfo(response.data); // Assuming the response.data is the stored basic info object
                 // console.log(response.data); // Log the response
             } catch (error) {
@@ -63,7 +63,7 @@ const Editor = () => {
     useEffect(() => {
         const fetchExperienceData = async () => {
             try {
-                const response = await axios.get('http://localhost:5000/api/workexperience');
+                const response = await axios.get('https://skillsync-yv17.onrender.com/api/workexperience');
                 const experienceData = response.data;
     
                 // Parse and format the dates from "yyyy-MM-dd" to "MM-yyyy"
@@ -84,7 +84,7 @@ const Editor = () => {
 
     const handleSaveWorkExperiences = async (data) => {
         try {
-            await axios.post('http://localhost:5000/api/workexperience', data);
+            await axios.post('https://skillsync-yv17.onrender.com/api/workexperience', data);
             console.log('Work experience data saved successfully');
             setExperienceData(data);
         } catch (error) {
@@ -99,7 +99,7 @@ const Editor = () => {
     useEffect(() => {
         const fetchProjectData = async () => {
             try {
-                const response = await axios.get('http://localhost:5000/api/project');
+                const response = await axios.get('https://skillsync-yv17.onrender.com/api/project');
                 const projectData = response.data;
 
                 // Parse and format the dates from "yyyy-MM-dd" to "MM-yyyy"
@@ -119,7 +119,7 @@ const Editor = () => {
 
     const handleSaveProject = async (data) => {
         try {
-            await axios.post('http://localhost:5000/api/project', data);
+            await axios.post('https://skillsync-yv17.onrender.com/api/project', data);
             console.log('Project data saved successfully');
             setProjectData(data);
         } catch (error) {
@@ -133,7 +133,7 @@ const Editor = () => {
     useEffect(() => {
         const fetchEducationData = async () => {
             try {
-                const response = await axios.get('http://localhost:5000/api/education'); // Adjust the API endpoint according to your backend route
+                const response = await axios.get('https://skillsync-yv17.onrender.com/api/education'); // Adjust the API endpoint according to your backend route
                 setEducationData(response.data);
             } catch (error) {
                 console.error('Error fetching education data:', error);
@@ -145,7 +145,7 @@ const Editor = () => {
 
     const handleSaveEducation = async (data) => {
         try {
-            await axios.post('http://localhost:5000/api/education', data); // Adjust the API endpoint according to your backend route
+            await axios.post('https://skillsync-yv17.onrender.com/api/education', data); // Adjust the API endpoint according to your backend route
             console.log('Education data saved successfully');
             setEducationData(data);
         } catch (error) {
@@ -160,7 +160,7 @@ const Editor = () => {
     useEffect(() => {
         const fetchSkills = async () => {
             try {
-                const response = await axios.get('http://localhost:5000/api/skills');
+                const response = await axios.get('https://skillsync-yv17.onrender.com/api/skills');
                 if (response.data && response.data.skills) {
                     console.log(response.data);
                     setSkills(response.data.skills);
@@ -186,7 +186,7 @@ const Editor = () => {
             const skillStrings = data.skills;
 
             // Send POST request to backend to save skills
-            await axios.post('http://localhost:5000/api/skills', { skills: skillStrings });
+            await axios.post('https://skillsync-yv17.onrender.com/api/skills', { skills: skillStrings });
             console.log('Skills saved successfully');
 
             // Update skills state if save is successful

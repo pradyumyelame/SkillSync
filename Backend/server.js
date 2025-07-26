@@ -19,7 +19,10 @@ const app = express();
 // Middleware
 app.use(express.json());
 // Enable CORS middleware
-app.use(cors());
+app.use(cors({
+  origin: "https://skillsync.vercel.app", // <-- your Vercel frontend URL
+  credentials: true,
+}));
 
 // Connect to MongoDB
 connectDB();

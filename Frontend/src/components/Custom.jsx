@@ -79,7 +79,7 @@ function Custom() {
     try {
       // --- Parallel API Calls for Efficiency ---
       const atsPromise = axios.post(
-        'http://localhost:5000/api/analyze-resume',
+        'https://skillsync-yv17.onrender.com/api/analyze-resume',
         {
           jobDescription,
           resumeText,
@@ -87,7 +87,7 @@ function Custom() {
       );
 
       const keywordsPromise = axios.post(
-        'http://localhost:5000/api/generate-technical-skills',
+        'https://skillsync-yv17.onrender.com/api/generate-technical-skills',
         {
           jobDescription,
         },
