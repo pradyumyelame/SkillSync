@@ -1,42 +1,117 @@
-const express = require('express');
-const router = express.Router();
-const Resume = require('../models/Resume');
-const checkJwt = require('../middleware/checkJwt.js');
+// pages/User1.jsx
+import React, { useEffect, useState } from 'react';
+import { useAuth0 } from '@auth0/auth0-react';
+import axios from 'axios';
 
-// 👇 GET resume for the authenticated user
-router.get('/me', checkJwt, async (req, res) => {
-  const userId = req.auth.sub; // Auth0 user unique ID
+import BasicInfoForm from '../components/Forms/BasicInfoForm';
+import AchievementForm from '../components/Forms/AchievementForm';
+import EducationForm from '../components/Forms/EducationForm';
+import ProjectForm from '../components/Forms/ProjectForm';
+import SkillForm from '../components/Forms/SkillForm';
+import WorkExperienceForm from '../components/Forms/WorkExperienceForm';
 
-  try {
-    const resume = await Resume.findOne({ userId });
-    if (!resume) return res.status(404).json({});
-    res.json(resume);
-  } catch (err) {
-    res.status(500).json({ error: 'Server error' });
-  }
-});
+const User1 = () => {
+  const { user, isAuthenticated, isLoading, logout, getAccessTokenSilently } = useAuth0();
 
-// 👇 Save or update section securely
-router.post('/save', checkJwt, async (req, res) => {
-  const userId = req.auth.sub;
-  const { section, data } = req.body;
+  const [resumeData, setResumeData] = useState({
+    basicInfo: {},
+    achievements: {},
+    education: {},
+    projects: {},
+    skills: { skills: [] },
+    workExperience: {}
+  });
 
-  if (!section || !data) return res.status(400).json({ error: 'Missing fields' });
+  const fetchResume = async () => {
+    try {
+      const token = await getAccessTokenSilently();
+      const res = await axios.get('https://skillsync-yv17.onrender.com/api/resume/me', {
+        headers: {
+          Authorization: `Bearer ${token}`
+        }
+      });
 
-  try {
-    let resume = await Resume.findOne({ userId });
+      setResumeData({
+        basicInfo: res.data.basicInfo || {},
+        achievements: res.data.achievements || {},
+        education: res.data.education || {},
+        projects: res.data.projects || {},
+        skills: res.data.skills || { skills: [] },
+        workExperience: res.data.workExperience || {}
+      });
 
-    if (!resume) {
-      resume = new Resume({ userId });
+      console.log("✅ Resume loaded for:", user?.sub);
+    } catch (error) {
+      console.error('❌ Failed to fetch resume:', error);
+      setResumeData({
+        basicInfo: {},
+        achievements: {},
+        education: {},
+        projects: {},
+        skills: { skills: [] },
+        workExperience: {}
+      });
     }
+  };
 
-    resume[section] = data;
-    await resume.save();
+  const handleSave = async (section, data) => {
+    try {
+      const token = await getAccessTokenSilently();
+      await axios.post('https://skillsync-yv17.onrender.com/api/resume/save', {
+        section,
+        data
+      }, {
+        headers: {
+          Authorization: `Bearer ${token}`
+        }
+      });
+      alert(`${section} saved successfully!`);
+    } catch (error) {
+      console.error(`❌ Failed to save ${section}:`, error);
+      alert(`Failed to save ${section}.`);
+    }
+  };
 
-    res.json({ message: `${section} saved successfully` });
-  } catch (err) {
-    res.status(500).json({ error: 'Failed to save resume section' });
-  }
-});
+  useEffect(() => {
+    if (isAuthenticated && user) {
+      fetchResume();
+    }
+  }, [user, isAuthenticated]);
 
-module.exports = router;
+  if (isLoading) return <p>Loading...</p>;
+  if (!isAuthenticated) return <p>Please login first</p>;
+
+  return (
+    <>
+      <BasicInfoForm
+        data={resumeData.basicInfo}
+        onSave={(data) => handleSave('basicInfo', data)}
+      />
+      <AchievementForm
+        data={resumeData.achievements}
+        onSave={(data) => handleSave('achievements', data)}
+      />
+      <EducationForm
+        data={resumeData.education}
+        onSave={(data) => handleSave('education', data)}
+      />
+      <ProjectForm
+        data={resumeData.projects}
+        onSave={(data) => handleSave('projects', data)}
+      />
+      <SkillForm
+        data={resumeData.skills?.skills || []}
+        onSave={(data) => handleSave('skills', data)}
+      />
+      <WorkExperienceForm
+        data={resumeData.workExperience}
+        onSave={(data) => handleSave('workExperience', data)}
+      />
+      <button onClick={() => logout({ returnTo: window.location.origin })}>
+        Logout
+      </button>
+    </>
+  );
+};
+
+export default User1;

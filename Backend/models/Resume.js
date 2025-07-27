@@ -1,10 +1,10 @@
+// models/Resume.js
 const mongoose = require('mongoose');
 
 const ResumeSchema = new mongoose.Schema({
   userId: {
     type: String,
-    required: true,
-    unique: true
+    required: true
   },
   basicInfo: Object,
   achievements: Object,
