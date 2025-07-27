@@ -75,14 +75,18 @@ const Header = () => {
               {isAuthenticated ? (
                 <button
                   className="bg-amber-500 hover:bg-green-500 text-white font-bold py-2 px-4 rounded mr-4"
-                  onClick={handleLogout} // 4. USE the new handler here
+                  onClick={handleLogout} 
                 >
                   Log Out
                 </button>
               ) : (
                 <button
                   className="bg-amber-500 hover:bg-green-500 text-white font-bold py-2 px-4 rounded mr-4"
-                  onClick={() => loginWithRedirect()}
+                  onClick={() =>
+                    loginWithRedirect({
+                      appState: { returnTo: "/User1" },
+                    })
+                  }
                 >
                   Log In
                 </button>
