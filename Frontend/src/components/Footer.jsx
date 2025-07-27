@@ -27,7 +27,7 @@ const Footer = () => {
         </div>
         <div className="container px-5 py-1 mx-auto flex flex-wrap flex-col sm:flex-row">
           <p className="text-gray-900 text-medium text-center sm:text-left">     
-            © 2024 SkillSync Resume Builder - Team
+            © 2025 SkillSync Resume Builder - Team
             <a
               href="https://twitter.com/knyttneve"
               rel="noopener noreferrer"
