@@ -2,19 +2,16 @@ import React, { useState, useEffect } from 'react';
 import styles from "./WorkExperienceForm.module.css";
 
 const WorkExperienceForm = ({ onSave, data }) => {
-    // The state now holds an array of experiences
-    const [experiences, setExperiences] = useState(data || []);
+    // FIX: Ensure the initial state is always an array.
+    const [experiences, setExperiences] = useState(Array.isArray(data) ? data : []);
 
     useEffect(() => {
-        // Ensure that if data is empty or null, we start with one blank form
-        if (!data || data.length === 0) {
-            setExperiences([{
-                title: '', company: '', location: '', startDate: '', endDate: '',
-                description1: '', description2: '', description3: '', description4: ''
-            }]);
-        } else {
-            setExperiences(data);
-        }
+        // This effect ensures the form initializes correctly, even if data is empty.
+        const initialData = Array.isArray(data) && data.length > 0 ? data : [{
+            title: '', company: '', location: '', startDate: '', endDate: '',
+            description1: '', description2: '', description3: '', description4: ''
+        }];
+        setExperiences(initialData);
     }, [data]);
 
     // Handle changes for a specific experience entry by its index
@@ -50,7 +47,8 @@ const WorkExperienceForm = ({ onSave, data }) => {
 
     return (
         <form onSubmit={handleSubmit}>
-            {experiences.map((exp, index) => (
+            {/* FIX: Add a check to ensure experiences is an array before mapping */}
+            {Array.isArray(experiences) && experiences.map((exp, index) => (
                 <div key={index} className={styles.experienceEntry}>
                     <div className={styles.detail3}>
                         {/* Title */}

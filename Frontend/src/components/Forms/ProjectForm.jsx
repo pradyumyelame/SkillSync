@@ -3,18 +3,15 @@ import styles from "./ProjectForm.module.css";
 
 const ProjectForm = ({ onSave, data }) => {
     // The state now holds an array of projects
-    const [projects, setProjects] = useState(data || []);
+    const [projects, setProjects] = useState(Array.isArray(data) ? data : []);
 
     useEffect(() => {
-        // Ensure that if data is empty or null, we start with one blank form
-        if (!data || data.length === 0) {
-            setProjects([{
-                title: '', date: '', link: '',
-                description1: '', description2: '', description3: '', description4: ''
-            }]);
-        } else {
-            setProjects(data);
-        }
+        // This effect ensures the form initializes correctly, even if data is empty.
+        const initialData = Array.isArray(data) && data.length > 0 ? data : [{
+            title: '', date: '', link: '',
+            description1: '', description2: '', description3: '', description4: ''
+        }];
+        setProjects(initialData);
     }, [data]);
 
     // Handle changes for a specific project entry by its index
@@ -50,7 +47,7 @@ const ProjectForm = ({ onSave, data }) => {
 
     return (
         <form onSubmit={handleSubmit}>
-            {projects.map((proj, index) => (
+            {Array.isArray(projects) && projects.map((proj, index) => (
                 <div key={index} className={styles.projectEntry}>
                     <div className={styles.row}>
                         {/* Title */}
