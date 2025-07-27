@@ -5,7 +5,7 @@ import { useResume } from "../context/ResumeContext"; // 1. IMPORT the context h
 
 const Header = () => {
   const [theme, setTheme] = useState("light");
-  const { user, loginWithRedirect, isAuthenticated, logout } = useAuth0();
+  const { loginWithRedirect, isAuthenticated, logout } = useAuth0();
   const { clearResume } = useResume(); // 2. GET the clear function from context
 
   useEffect(() => {
@@ -14,9 +14,9 @@ const Header = () => {
 
   // 3. CREATE a handler for logging out
   const handleLogout = () => {
-    // First, clear the resume data
+    // First, clear the resume data from the state
     clearResume();
-    // Then, log the user out
+    // Then, log the user out from Auth0
     logout({ logoutParams: { returnTo: window.location.origin } });
   };
 
@@ -42,15 +42,13 @@ const Header = () => {
           <span className="ml-3 text-xl text-gray">SkillSync : Resume Builder</span>
         </Link>
 
-        {/* Spacer to separate left and right content */}
         <div className="flex-grow"></div>
 
-        {/* Navigation Section */}
         <nav className="md:flex md:items-center md:justify-end">
           <div className="flex flex-wrap items-center text-base text-gray-900">
             {isAuthenticated ? (
               <>
-                <Link to={"/"} className="mr-5 hover:text-amber-500">
+                <Link to={"/User1"} className="mr-5 hover:text-amber-500">
                   Resume Studio
                 </Link>
                 <Link to={"/Custom"} className="mr-5 hover:text-amber-500">
@@ -66,11 +64,9 @@ const Header = () => {
             <a href="#card" className="mr-5 hover:text-amber-500">
               Templates
             </a>
-
             <Link to={"/About"} className="mr-5 hover:text-amber-500">
               About
             </Link>
-
             <Link to={"/Context"} className="mr-5 hover:text-amber-500">
               Contact Us
             </Link>

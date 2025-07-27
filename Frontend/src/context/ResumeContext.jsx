@@ -1,60 +1,73 @@
-import React, { createContext, useState, useContext } from 'react';
+import React, { createContext, useState, useContext, useCallback } from 'react';
 import { useAuth0 } from '@auth0/auth0-react';
 import axios from 'axios';
+
+// The initial state when no user is logged in or data is cleared
+const initialResumeState = {
+  basicInfo: {},
+  achievements: {},
+  education: {},
+  projects: {},
+  skills: { skills: [] },
+  workExperience: {}
+};
 
 // 1. Create the context
 const ResumeContext = createContext();
 
-// Custom hook to use the context easily
+// 2. Create a custom hook for easy access to the context
 export const useResume = () => useContext(ResumeContext);
 
-// 2. Create the provider component
+// 3. Create the Provider Component
 export const ResumeProvider = ({ children }) => {
-  const { getAccessTokenSilently } = useAuth0();
-  
-  // Central state for all resume data
-  const initialResumeState = {
-    basicInfo: {},
-    achievements: {},
-    education: {},
-    projects: {},
-    skills: { skills: [] },
-    workExperience: {}
-  };
-
+  const { getAccessTokenSilently, isAuthenticated } = useAuth0();
   const [resumeData, setResumeData] = useState(initialResumeState);
+  const [isResumeReady, setIsResumeReady] = useState(false); // To track if data has been loaded
 
-  // Function to fetch data (moved from User1.jsx)
-  const fetchResume = async () => {
+  // Function to fetch data from the backend
+  const fetchResume = useCallback(async () => {
+    if (!isAuthenticated) return;
     try {
       const token = await getAccessTokenSilently();
       const res = await axios.get('https://skillsync-yv17.onrender.com/api/resume/me', {
         headers: { Authorization: `Bearer ${token}` }
       });
-      setResumeData({
-        basicInfo: res.data.basicInfo || {},
-        achievements: res.data.achievements || {},
-        education: res.data.education || {},
-        projects: res.data.projects || {},
-        skills: res.data.skills || { skills: [] },
-        workExperience: res.data.workExperience || {}
-      });
+      
+      // If data is found, update the state
+      if (res.data && Object.keys(res.data).length > 0) {
+        setResumeData({
+          basicInfo: res.data.basicInfo || {},
+          achievements: res.data.achievements || {},
+          education: res.data.education || {},
+          projects: res.data.projects || {},
+          skills: res.data.skills || { skills: [] },
+          workExperience: res.data.workExperience || {}
+        });
+        setIsResumeReady(true);
+      } else {
+        // If no data is found for the user, reset to initial state
+        setResumeData(initialResumeState);
+        setIsResumeReady(false);
+      }
     } catch (error) {
       console.error('Failed to fetch resume:', error);
       setResumeData(initialResumeState); // Reset on error
+      setIsResumeReady(false);
     }
-  };
-  
-  // Function to clear the state
+  }, [getAccessTokenSilently, isAuthenticated]);
+
+  // Function to clear the state on logout
   const clearResume = () => {
     setResumeData(initialResumeState);
+    setIsResumeReady(false);
   };
 
-  // 3. Provide state and functions to children
+  // The value that will be provided to all consuming components
   const value = {
     resumeData,
     fetchResume,
-    clearResume
+    clearResume,
+    isResumeReady // Provide this to the UI
   };
 
   return (

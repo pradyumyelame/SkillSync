@@ -12,13 +12,12 @@ import "slick-carousel/slick/slick-theme.css";
 import Custom from "./components/Custom";
 import User1 from "./pages/User1";
 
-// 1. Import the provider you created earlier
+// 1. Import the provider
 import { ResumeProvider } from "./context/ResumeContext";
 
 function App() {
   return (
-    // 2. Wrap all your components with the ResumeProvider
-    // This makes the context available to Header, Routes, and Footer.
+    // 2. Wrap all components with the ResumeProvider
     <ResumeProvider>
       <Header />
 
@@ -28,7 +27,8 @@ function App() {
         <Route path="/Context" element={<Context />} />
         <Route path="/User" element={<User />} />
         <Route path="/Custom" element={<Custom />} />
-        <Route path="/User1" element={<User1 />} />
+        {/* Make sure the main resume page is User1 */}
+        <Route path="/User1" element={<User1 />} /> 
       </Routes>
 
       <Footer />

@@ -1,22 +1,35 @@
-import React, { useEffect } from 'react';
+import React, { useEffect, useState } from 'react';
 import { useAuth0 } from '@auth0/auth0-react';
 import axios from 'axios';
 import { useResume } from '../context/ResumeContext'; // Import the custom hook
 
-// Import all your form components
+// Import all your form and display components
 import BasicInfoForm from '../components/Forms/BasicInfoForm';
 import AchievementForm from '../components/Forms/AchievementForm';
 import EducationForm from '../components/Forms/EducationForm';
 import ProjectForm from '../components/Forms/ProjectForm';
 import SkillForm from '../components/Forms/SkillForm';
 import WorkExperienceForm from '../components/Forms/WorkExperienceForm';
+import ResumeForm from '../components/ResumeForm'; 
+import styles from '../components/Editor.module.css';
 
 const User1 = () => {
   const { user, isAuthenticated, isLoading, getAccessTokenSilently } = useAuth0();
-  // Get state and fetch function from the global context
-  const { resumeData, fetchResume } = useResume();
+  // Get everything needed from the global context
+  const { resumeData, fetchResume, isResumeReady } = useResume();
 
-  // Fetch the user's resume data when the component mounts or the user changes
+  // This state is only for the UI (which editor tab is selected)
+  const [selectedSection, setSelectedSection] = useState('basicInfo');
+  const sections = {
+    basicInfo: "Basic Info",
+    workExp: "Work Experience",
+    project: "Projects",
+    education: "Education",
+    skills: "Skills",
+    achievement: "Achievements",
+  };
+
+  // Fetch resume data when the user is authenticated
   useEffect(() => {
     if (isAuthenticated && user) {
       fetchResume();
@@ -35,8 +48,8 @@ const User1 = () => {
           Authorization: `Bearer ${token}`
         }
       });
-      // After saving, fetch the latest data to update the UI
-      fetchResume(); 
+      // After saving, fetch the latest data to ensure UI is up-to-date
+      await fetchResume(); 
       alert(`${section} saved successfully!`);
     } catch (error) {
       console.error('Failed to save:', error);
@@ -45,37 +58,49 @@ const User1 = () => {
   };
 
   if (isLoading) return <p>Loading...</p>;
-  if (!isAuthenticated) return <p>Please login first.</p>;
+  if (!isAuthenticated) return <p>Please login to build your resume.</p>;
 
   return (
-    <>
-      {/* Each form gets its data from the global context and calls handleSave */}
-      <BasicInfoForm
-        data={resumeData.basicInfo}
-        onSave={(data) => handleSave('basicInfo', data)}
-      />
-      <AchievementForm
-        data={resumeData.achievements}
-        onSave={(data) => handleSave('achievements', data)}
-      />
-      <EducationForm
-        data={resumeData.education}
-        onSave={(data) => handleSave('education', data)}
-      />
-      <ProjectForm
-        data={resumeData.projects}
-        onSave={(data) => handleSave('projects', data)}
-      />
-      <SkillForm
-        // Handle the nested structure of the skills data
-        data={resumeData.skills?.skills || []}
-        onSave={(data) => handleSave('skills', data)}
-      />
-      <WorkExperienceForm
-        data={resumeData.workExperience}
-        onSave={(data) => handleSave('workExperience', data)}
-      />
-    </>
+    <div style={{ display: 'flex', gap: '20px', padding: '20px' }}>
+      {/* Left side: The Editor */}
+      <div className={styles.container} style={{ flex: 1 }}>
+        <div className={styles.heading}>
+          {Object.entries(sections).map(([key, value]) => (
+            <div 
+              className={`${styles.section} ${selectedSection === key ? styles.active : ""}`} 
+              key={key} 
+              onClick={() => setSelectedSection(key)}
+            >
+              {value}
+            </div>
+          ))}
+        </div>
+        
+        <div className={styles.formdata}>
+          {selectedSection === 'basicInfo' && <BasicInfoForm data={resumeData.basicInfo} onSave={(data) => handleSave('basicInfo', data)} />}
+          {selectedSection === 'workExp' && <WorkExperienceForm data={resumeData.workExperience} onSave={(data) => handleSave('workExperience', data)} />}
+          {selectedSection === 'project' && <ProjectForm data={resumeData.projects} onSave={(data) => handleSave('projects', data)} />}
+          {selectedSection === 'education' && <EducationForm data={resumeData.education} onSave={(data) => handleSave('education', data)} />}
+          {selectedSection === 'skills' && <SkillForm data={resumeData.skills?.skills || []} onSave={(data) => handleSave('skills', data)} />}
+          {selectedSection === 'achievement' && <AchievementForm data={resumeData.achievements} onSave={(data) => handleSave('achievements', data)} />}
+        </div>
+      </div>
+
+      {/* Right side: The Resume Preview */}
+      <div className={styles.template} style={{ flex: 1, border: '1px solid #ccc', padding: '15px' }}>
+        {isResumeReady ? (
+          <ResumeForm 
+            basicInfo={resumeData.basicInfo} 
+            educationData={resumeData.education} 
+            experienceData={resumeData.workExperience}
+            projectData={resumeData.projects}
+            skills={resumeData.skills?.skills || []}
+          />
+        ) : (
+          <p>Your resume preview will appear here once you fill in the details.</p>
+        )}
+      </div>
+    </div>
   );
 };
 
