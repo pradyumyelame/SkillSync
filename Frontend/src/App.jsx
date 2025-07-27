@@ -5,30 +5,37 @@ import Footer from "./components/Footer";
 import Home from "./modules/Home";
 import About from "./modules/About";
 import Context from "./modules/Context";
-import User from "./modules/User";
+// We will remove the old 'User' import if it exists
 import React from "react";
 import "slick-carousel/slick/slick.css";
 import "slick-carousel/slick/slick-theme.css";
 import Custom from "./components/Custom";
-import User1 from "./pages/User1";
+import User1 from "./pages/User1"; // This is our main resume page
 
-// 1. Import the provider
+// Import the provider
 import { ResumeProvider } from "./context/ResumeContext";
 
 function App() {
   return (
-    // 2. Wrap all components with the ResumeProvider
+    // The provider must wrap everything
     <ResumeProvider>
       <Header />
 
       <Routes>
+        {/* The homepage route */}
         <Route path="/" element={<Home />} />
+
+        {/* The main route for the resume builder */}
+        <Route path="/User1" element={<User1 />} /> 
+
+        {/* Other pages */}
         <Route path="/About" element={<About />} />
         <Route path="/Context" element={<Context />} />
-        <Route path="/User" element={<User />} />
         <Route path="/Custom" element={<Custom />} />
-        {/* Make sure the main resume page is User1 */}
-        <Route path="/User1" element={<User1 />} /> 
+
+        {/* It is critical to remove any old routes to 'Editor' or 'User' */}
+        {/* <Route path="/editor" element={<Editor />} />  <-- DELETE THIS IF IT EXISTS */}
+
       </Routes>
 
       <Footer />
