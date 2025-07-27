@@ -79,4 +79,44 @@ label {
   background-color: #ffc107; /* background color */
   border-radius: 5px;
   }
-  
+  /* Add this to both CSS files */
+
+.experienceEntry, .projectEntry {
+  border: 1px solid #e2e8f0;
+  border-radius: 8px;
+  padding: 20px;
+  margin-bottom: 20px;
+  position: relative;
+}
+
+.actions {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  margin-top: 20px;
+}
+
+.addBtn, .removeBtn {
+  padding: 8px 16px;
+  border: 1px solid #cbd5e0;
+  border-radius: 6px;
+  cursor: pointer;
+  background-color: #f7fafc;
+  font-weight: 500;
+  transition: background-color 0.3s ease;
+}
+
+.addBtn:hover {
+  background-color: #edf2f7;
+}
+
+.removeBtn {
+  background-color: #fff5f5;
+  border-color: #fed7d7;
+  color: #c53030;
+  margin-top: 10px;
+}
+
+.removeBtn:hover {
+  background-color: #fed7d7;
+}

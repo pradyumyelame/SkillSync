@@ -1,142 +1,130 @@
-// ProjectForm.jsx
-
-import React, { useState,useEffect } from 'react';
+import React, { useState, useEffect } from 'react';
 import styles from "./ProjectForm.module.css";
 
 const ProjectForm = ({ onSave, data }) => {
-    const [project, setProject] = useState(data || {
-        title: '',
-        date: '',
-        deployedLink: '',
-        description1: '',
-        description2: '',
-        description3: '',
-        description4: ''
-    });
+    // The state now holds an array of projects
+    const [projects, setProjects] = useState(data || []);
 
     useEffect(() => {
-        if (data) {
-            setProject(data);
+        // Ensure that if data is empty or null, we start with one blank form
+        if (!data || data.length === 0) {
+            setProjects([{
+                title: '', date: '', link: '',
+                description1: '', description2: '', description3: '', description4: ''
+            }]);
+        } else {
+            setProjects(data);
         }
     }, [data]);
 
-
-    const handleChange = (e) => {
+    // Handle changes for a specific project entry by its index
+    const handleChange = (e, index) => {
         const { name, value } = e.target;
-        setProject({
-            ...project,
-            [name]: value
-        });
+        const updatedProjects = [...projects];
+        updatedProjects[index][name] = value;
+        setProjects(updatedProjects);
     };
 
+    // Add a new, blank project form
+    const handleAddProject = () => {
+        setProjects([
+            ...projects,
+            {
+                title: '', date: '', link: '',
+                description1: '', description2: '', description3: '', description4: ''
+            }
+        ]);
+    };
+
+    // Remove a project form by its index
+    const handleRemoveProject = (index) => {
+        const updatedProjects = projects.filter((_, i) => i !== index);
+        setProjects(updatedProjects);
+    };
+
+    // Save the entire array of projects
     const handleSubmit = (e) => {
         e.preventDefault();
-        onSave(project);
+        onSave(projects);
     };
 
     return (
         <form onSubmit={handleSubmit}>
-            <div className={styles.row}>
-                <div className={styles.item1}>
-                    <div className={styles.formGroup}>
-                        <label className={styles.label}>Title:</label>
-                        <input
-                            className={styles.input}
-                            type="text"
-                            name="title"
-                            value={project.title}
-                            onChange={handleChange}
-                            placeholder="Enter title"
-                            required
-                        />
+            {projects.map((proj, index) => (
+                <div key={index} className={styles.projectEntry}>
+                    <div className={styles.row}>
+                        {/* Title */}
+                        <div className={styles.item1}>
+                            <label className={styles.label}>Title:</label>
+                            <input
+                                className={styles.input} type="text" name="title"
+                                value={proj.title} onChange={(e) => handleChange(e, index)}
+                                placeholder="e.g., E-commerce Website" required
+                            />
+                        </div>
+                        {/* Date */}
+                        <div className={styles.item2}>
+                            <label className={styles.label}>Date:</label>
+                            <input
+                                className={styles.input} type="date" name="date"
+                                value={proj.date} onChange={(e) => handleChange(e, index)}
+                                required
+                            />
+                        </div>
+                        {/* Deployed Link */}
+                        <div className={styles.item3}>
+                            <label className={styles.label}>Project Link: (optional)</label>
+                            <input
+                                className={styles.input} type="text" name="link"
+                                value={proj.link} onChange={(e) => handleChange(e, index)}
+                                placeholder="https://example.com"
+                            />
+                        </div>
+                        {/* Descriptions */}
+                        <div className={styles.item4}>
+                            <label className={styles.label}>Description 1:</label>
+                            <input
+                                className={styles.input} type="text" name="description1"
+                                value={proj.description1} onChange={(e) => handleChange(e, index)}
+                                placeholder="Feature or technology used"
+                            />
+                        </div>
+                        <div className={styles.item5}>
+                            <label className={styles.label}>Description 2:</label>
+                            <input
+                                className={styles.input} type="text" name="description2"
+                                value={proj.description2} onChange={(e) => handleChange(e, index)}
+                            />
+                        </div>
+                        <div className={styles.item6}>
+                            <label className={styles.label}>Description 3:</label>
+                            <input
+                                className={styles.input} type="text" name="description3"
+                                value={proj.description3} onChange={(e) => handleChange(e, index)}
+                            />
+                        </div>
+                        <div className={styles.item7}>
+                            <label className={styles.label}>Description 4:</label>
+                            <input
+                                className={styles.input} type="text" name="description4"
+                                value={proj.description4} onChange={(e) => handleChange(e, index)}
+                            />
+                        </div>
                     </div>
+                    {projects.length > 1 && (
+                        <button type="button" onClick={() => handleRemoveProject(index)} className={styles.removeBtn}>
+                            Remove
+                        </button>
+                    )}
                 </div>
-                <div className={styles.item2}>
-                    <div className={styles.formGroup}>
-                        <label className={styles.label}>Date:</label>
-                        <input
-                            className={styles.input}
-                            type="text"
-                            name="date"
-                            value={project.date}
-                            onChange={handleChange}
-                            placeholder="mm-yyyy"
-                            required
-                        />
-                    </div>
-                </div>
-                <div className={styles.item3}>
-                    <div className={styles.formGroup}>
-                        <label className={styles.label}>Deployed Link:</label>
-                        <input
-                            className={styles.input}
-                            type="text"
-                            name="deployedLink"
-                            value={project.deployedLink}
-                            onChange={handleChange}
-                            placeholder="Enter deployed link"
-                            required
-                        />
-                    </div>
-                </div>
-                <div className={styles.item4}>
-                    <div className={styles.formGroup}>
-                        <label className={styles.label}>Description 1:</label>
-                        <input
-                            className={styles.input}
-                            type="text"
-                            name="description1"
-                            value={project.description1}
-                            onChange={handleChange}
-                            placeholder="Enter description"
-                            required
-                        />
-                    </div>
-                </div>
-                <div className={styles.item5}>
-                    <div className={styles.formGroup}>
-                        <label className={styles.label}>Description 2:</label>
-                        <input
-                            className={styles.input}
-                            type="text"
-                            name="description2"
-                            value={project.description2}
-                            onChange={handleChange}
-                            placeholder="Enter description"
-                            required
-                        />
-                    </div>
-                </div>
-                <div className={styles.item6}>
-                    <div className={styles.formGroup}>
-                        <label className={styles.label}>Description 3:</label>
-                        <input
-                            className={styles.input}
-                            type="text"
-                            name="description3"
-                            value={project.description3}
-                            onChange={handleChange}
-                            placeholder="Enter description"
-                            required
-                        />
-                    </div>
-                </div>
-                <div className={styles.item7}>
-                    <div className={styles.formGroup}>
-                        <label className={styles.label}>Description 4:</label>
-                        <input
-                            className={styles.input}
-                            type="text"
-                            name="description4"
-                            value={project.description4}
-                            onChange={handleChange}
-                            placeholder="Enter description"
-                            required
-                        />
-                    </div>
-                </div>
+            ))}
+            
+            <div className={styles.actions}>
+                <button type="button" onClick={handleAddProject} className={styles.addBtn}>
+                    Add New Project
+                </button>
+                <button className={styles.btn} type="submit">Save All Projects</button>
             </div>
-            <button className={styles.btn} type="submit">Save</button>
         </form>
     );
 };
