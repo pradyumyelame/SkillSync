@@ -1,14 +1,24 @@
 import { useEffect, useState } from "react";
 import { Link } from "react-router-dom";
 import { useAuth0 } from "@auth0/auth0-react";
+import { useResume } from "../context/ResumeContext"; // 1. IMPORT the context hook
 
 const Header = () => {
   const [theme, setTheme] = useState("light");
   const { user, loginWithRedirect, isAuthenticated, logout } = useAuth0();
+  const { clearResume } = useResume(); // 2. GET the clear function from context
 
   useEffect(() => {
     document.body.className = theme;
   }, [theme]);
+
+  // 3. CREATE a handler for logging out
+  const handleLogout = () => {
+    // First, clear the resume data
+    clearResume();
+    // Then, log the user out
+    logout({ logoutParams: { returnTo: window.location.origin } });
+  };
 
   return (
     <header className="flex justify-between items-center p-4 text-gray-600 bg-teal-400 body-font h-24">
@@ -39,9 +49,7 @@ const Header = () => {
         <nav className="md:flex md:items-center md:justify-end">
           <div className="flex flex-wrap items-center text-base text-gray-900">
             {isAuthenticated ? (
-              // ✅ ADDED: Fragment to hold multiple links for authenticated users
               <>
-                {/* ✅ CHANGED: "Resume Builder" link updated to "Resume Studio" */}
                 <Link to={"/"} className="mr-5 hover:text-amber-500">
                   Resume Studio
                 </Link>
@@ -71,9 +79,7 @@ const Header = () => {
               {isAuthenticated ? (
                 <button
                   className="bg-amber-500 hover:bg-green-500 text-white font-bold py-2 px-4 rounded mr-4"
-                  onClick={() =>
-                    logout({ logoutParams: { returnTo: window.location.origin } })
-                  }
+                  onClick={handleLogout} // 4. USE the new handler here
                 >
                   Log Out
                 </button>

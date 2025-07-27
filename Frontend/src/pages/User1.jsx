@@ -1,7 +1,9 @@
-import React, { useEffect, useState } from 'react';
+import React, { useEffect } from 'react';
 import { useAuth0 } from '@auth0/auth0-react';
 import axios from 'axios';
+import { useResume } from '../context/ResumeContext'; // Import the custom hook
 
+// Import all your form components
 import BasicInfoForm from '../components/Forms/BasicInfoForm';
 import AchievementForm from '../components/Forms/AchievementForm';
 import EducationForm from '../components/Forms/EducationForm';
@@ -10,55 +12,18 @@ import SkillForm from '../components/Forms/SkillForm';
 import WorkExperienceForm from '../components/Forms/WorkExperienceForm';
 
 const User1 = () => {
-  const { user, isAuthenticated, isLoading, logout, getAccessTokenSilently } = useAuth0();
+  const { user, isAuthenticated, isLoading, getAccessTokenSilently } = useAuth0();
+  // Get state and fetch function from the global context
+  const { resumeData, fetchResume } = useResume();
 
-  const [resumeData, setResumeData] = useState({
-    basicInfo: {},
-    achievements: {},
-    education: {},
-    projects: {},
-    skills: { skills: [] },
-    workExperience: {}
-  });
-
-  // ✅ Securely fetch resume data from backend
-  const fetchResume = async () => {
-    try {
-      const token = await getAccessTokenSilently();
-      const res = await axios.get('https://skillsync-yv17.onrender.com/api/resume/me', {
-        headers: {
-          Authorization: `Bearer ${token}`
-        }
-      });
-
-      setResumeData({
-        basicInfo: res.data.basicInfo || {},
-        achievements: res.data.achievements || {},
-        education: res.data.education || {},
-        projects: res.data.projects || {},
-        skills: res.data.skills || { skills: [] },
-        workExperience: res.data.workExperience || {}
-      });
-    } catch (error) {
-      console.error('Failed to fetch resume:', error);
-      setResumeData({
-        basicInfo: {},
-        achievements: {},
-        education: {},
-        projects: {},
-        skills: { skills: [] },
-        workExperience: {}
-      });
-    }
-  };
-
+  // Fetch the user's resume data when the component mounts or the user changes
   useEffect(() => {
     if (isAuthenticated && user) {
       fetchResume();
     }
-  }, [user, isAuthenticated]);
-
-  // ✅ Securely save data to backend
+  }, [user, isAuthenticated, fetchResume]);
+  
+  // Securely save a section of the resume to the backend
   const handleSave = async (section, data) => {
     try {
       const token = await getAccessTokenSilently();
@@ -70,6 +35,8 @@ const User1 = () => {
           Authorization: `Bearer ${token}`
         }
       });
+      // After saving, fetch the latest data to update the UI
+      fetchResume(); 
       alert(`${section} saved successfully!`);
     } catch (error) {
       console.error('Failed to save:', error);
@@ -78,10 +45,11 @@ const User1 = () => {
   };
 
   if (isLoading) return <p>Loading...</p>;
-  if (!isAuthenticated) return <p>Please login first</p>;
+  if (!isAuthenticated) return <p>Please login first.</p>;
 
   return (
     <>
+      {/* Each form gets its data from the global context and calls handleSave */}
       <BasicInfoForm
         data={resumeData.basicInfo}
         onSave={(data) => handleSave('basicInfo', data)}
@@ -99,6 +67,7 @@ const User1 = () => {
         onSave={(data) => handleSave('projects', data)}
       />
       <SkillForm
+        // Handle the nested structure of the skills data
         data={resumeData.skills?.skills || []}
         onSave={(data) => handleSave('skills', data)}
       />
@@ -106,9 +75,6 @@ const User1 = () => {
         data={resumeData.workExperience}
         onSave={(data) => handleSave('workExperience', data)}
       />
-      <button onClick={() => logout({ returnTo: window.location.origin })}>
-        Logout
-      </button>
     </>
   );
 };
