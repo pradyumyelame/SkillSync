@@ -2,7 +2,6 @@ import React, { createContext, useState, useContext, useCallback } from 'react';
 import { useAuth0 } from '@auth0/auth0-react';
 import axios from 'axios';
 
-// The initial state when no user is logged in or data is cleared
 const initialResumeState = {
   basicInfo: {},
   achievements: {},
@@ -12,29 +11,27 @@ const initialResumeState = {
   workExperience: {}
 };
 
-// 1. Create the context
 const ResumeContext = createContext();
 
-// 2. Create a custom hook for easy access to the context
 export const useResume = () => useContext(ResumeContext);
 
-// 3. Create the Provider Component
 export const ResumeProvider = ({ children }) => {
   const { getAccessTokenSilently, isAuthenticated } = useAuth0();
   const [resumeData, setResumeData] = useState(initialResumeState);
-  const [isResumeReady, setIsResumeReady] = useState(false); // To track if data has been loaded
+  const [loading, setLoading] = useState(false); // Use a dedicated loading state
 
-  // Function to fetch data from the backend
   const fetchResume = useCallback(async () => {
     if (!isAuthenticated) return;
+    
+    setLoading(true); // Start loading before the API call
     try {
       const token = await getAccessTokenSilently();
       const res = await axios.get('https://skillsync-yv17.onrender.com/api/resume/me', {
         headers: { Authorization: `Bearer ${token}` }
       });
       
-      // If data is found, update the state
-      if (res.data && Object.keys(res.data).length > 0) {
+      // Check if the response contains actual resume data, not just an empty object or userId
+      if (res.data && Object.keys(res.data).length > 1) { 
         setResumeData({
           basicInfo: res.data.basicInfo || {},
           achievements: res.data.achievements || {},
@@ -43,31 +40,29 @@ export const ResumeProvider = ({ children }) => {
           skills: res.data.skills || { skills: [] },
           workExperience: res.data.workExperience || {}
         });
-        setIsResumeReady(true);
       } else {
-        // If no data is found for the user, reset to initial state
+        // If no data is found for the user, reset to the initial empty state
         setResumeData(initialResumeState);
-        setIsResumeReady(false);
       }
     } catch (error) {
       console.error('Failed to fetch resume:', error);
       setResumeData(initialResumeState); // Reset on error
-      setIsResumeReady(false);
+    } finally {
+      setLoading(false); // Stop loading after the API call is complete
     }
   }, [getAccessTokenSilently, isAuthenticated]);
 
-  // Function to clear the state on logout
+  // This function is called by the Header on logout
   const clearResume = () => {
     setResumeData(initialResumeState);
-    setIsResumeReady(false);
+    setLoading(false); // Ensure loading is reset
   };
 
-  // The value that will be provided to all consuming components
   const value = {
     resumeData,
+    loading, // Provide the loading state to other components
     fetchResume,
-    clearResume,
-    isResumeReady // Provide this to the UI
+    clearResume
   };
 
   return (

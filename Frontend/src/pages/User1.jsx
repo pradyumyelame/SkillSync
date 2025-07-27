@@ -1,7 +1,7 @@
 import React, { useEffect, useState } from 'react';
 import { useAuth0 } from '@auth0/auth0-react';
 import axios from 'axios';
-import { useResume } from '../context/ResumeContext'; // Import the custom hook
+import { useResume } from '../context/ResumeContext';
 
 // Import all your form and display components
 import BasicInfoForm from '../components/Forms/BasicInfoForm';
@@ -14,9 +14,9 @@ import ResumeForm from '../components/ResumeForm';
 import styles from '../components/Editor.module.css';
 
 const User1 = () => {
-  const { user, isAuthenticated, isLoading, getAccessTokenSilently } = useAuth0();
-  // Get everything needed from the global context
-  const { resumeData, fetchResume, isResumeReady } = useResume();
+  const { user, isAuthenticated, isLoading: isAuthLoading, getAccessTokenSilently } = useAuth0();
+  // Get the new loading state from the context
+  const { resumeData, loading: isResumeLoading, fetchResume } = useResume();
 
   // This state is only for the UI (which editor tab is selected)
   const [selectedSection, setSelectedSection] = useState('basicInfo');
@@ -44,11 +44,8 @@ const User1 = () => {
         section,
         data
       }, {
-        headers: {
-          Authorization: `Bearer ${token}`
-        }
+        headers: { Authorization: `Bearer ${token}` }
       });
-      // After saving, fetch the latest data to ensure UI is up-to-date
       await fetchResume(); 
       alert(`${section} saved successfully!`);
     } catch (error) {
@@ -57,7 +54,8 @@ const User1 = () => {
     }
   };
 
-  if (isLoading) return <p>Loading...</p>;
+  // Show a loading message while Auth0 is authenticating the user
+  if (isAuthLoading) return <p>Authenticating...</p>;
   if (!isAuthenticated) return <p>Please login to build your resume.</p>;
 
   return (
@@ -88,7 +86,10 @@ const User1 = () => {
 
       {/* Right side: The Resume Preview */}
       <div className={styles.template} style={{ flex: 1, border: '1px solid #ccc', padding: '15px' }}>
-        {isResumeReady ? (
+        {/* This is the crucial change: check the resume loading state */}
+        {isResumeLoading ? (
+          <p>Loading Resume...</p>
+        ) : (
           <ResumeForm 
             basicInfo={resumeData.basicInfo} 
             educationData={resumeData.education} 
@@ -96,8 +97,6 @@ const User1 = () => {
             projectData={resumeData.projects}
             skills={resumeData.skills?.skills || []}
           />
-        ) : (
-          <p>Your resume preview will appear here once you fill in the details.</p>
         )}
       </div>
     </div>
