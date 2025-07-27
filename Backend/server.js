@@ -20,7 +20,7 @@ const app = express();
 app.use(express.json());
 // Enable CORS middleware
 app.use(cors({
-  origin: "https://skillsync-navy.vercel.app", // <-- your Vercel frontend URL
+  origin: "https://skill-sync-sandy.vercel.app", // <-- your Vercel frontend URL
   credentials: true,
 }));
 
