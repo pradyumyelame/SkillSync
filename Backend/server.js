@@ -11,6 +11,8 @@ const educationRoutes = require('./routes/educationRoutes');
 const skillRoutes = require('./routes/skillRoutes'); 
 
 const outputRoutes = require('./routes/outputRoutes');
+const resumeRoutes = require('./routes/resumeRoutes');
+
 
 // const achievementRoutes = require('./routes/achievementRoutes');
 
@@ -49,7 +51,7 @@ app.use('/api/', skillRoutes )
 // app.use('/api',achievementRoutes);
 
 app.use('/api', outputRoutes); 
-
+app.use('/api/resume', resumeRoutes);
 const PORT = process.env.PORT || 5000;
 app.listen(PORT, () => {
     console.log(`Server running on port ${PORT}`);
