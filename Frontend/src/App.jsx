@@ -15,6 +15,7 @@ import "slick-carousel/slick/slick-theme.css";
 // import { SliderData } from "./components/SliderData";
 // import { SlidesData } from "./components/SlidesData";
 import Custom from "./components/Custom";
+import User1 from "./pages/User1";
 
 function App() {
   return (
@@ -27,6 +28,7 @@ function App() {
         <Route path="/Context" element={<Context />} />
         <Route path='/User' element={<User />} />
         <Route path='/Custom' element={<Custom />} />
+        <Route path="/User1" element={<User1 />} />
       </Routes>
 
       {/* <SlickImgSlide slidess={SlidesData} />

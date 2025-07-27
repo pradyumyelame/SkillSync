@@ -1,14 +1,17 @@
 const mongoose = require('mongoose');
 
-const resumeSchema = new mongoose.Schema({
-  userId: { type: String, required: true, unique: true },
+const ResumeSchema = new mongoose.Schema({
+  userId: {
+    type: String,
+    required: true,
+    unique: true
+  },
   basicInfo: Object,
   achievements: Object,
   education: Object,
-  projects: Object,        // ✅ New field
-  skills: Object,          // ✅ New field
-  workExperience: Object   // ✅ New field
+  projects: Object,
+  skills: Object,
+  workExperience: Object
 });
 
-const Resume = mongoose.model('Resume', resumeSchema);
-module.exports = Resume;
+module.exports = mongoose.model('Resume', ResumeSchema);

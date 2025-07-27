@@ -1,11 +1,14 @@
 const express = require('express');
 const router = express.Router();
 const Resume = require('../models/Resume');
+const checkJwt = require('../middleware/checkJwt.js');
 
-// GET resume by userId
-router.get('/:userId', async (req, res) => {
+// 👇 GET resume for the authenticated user
+router.get('/me', checkJwt, async (req, res) => {
+  const userId = req.auth.sub; // Auth0 user unique ID
+
   try {
-    const resume = await Resume.findOne({ userId: req.params.userId });
+    const resume = await Resume.findOne({ userId });
     if (!resume) return res.status(404).json({});
     res.json(resume);
   } catch (err) {
@@ -13,10 +16,12 @@ router.get('/:userId', async (req, res) => {
   }
 });
 
-// POST to save or update a section
-router.post('/save', async (req, res) => {
-  const { userId, section, data } = req.body;
-  if (!userId || !section || !data) return res.status(400).json({ error: 'Missing fields' });
+// 👇 Save or update section securely
+router.post('/save', checkJwt, async (req, res) => {
+  const userId = req.auth.sub;
+  const { section, data } = req.body;
+
+  if (!section || !data) return res.status(400).json({ error: 'Missing fields' });
 
   try {
     let resume = await Resume.findOne({ userId });

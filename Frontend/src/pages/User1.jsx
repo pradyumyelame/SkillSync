@@ -1,6 +1,7 @@
 import React, { useEffect, useState } from 'react';
 import { useAuth0 } from '@auth0/auth0-react';
 import axios from 'axios';
+
 import BasicInfoForm from '../components/Forms/BasicInfoForm';
 import AchievementForm from '../components/Forms/AchievementForm';
 import EducationForm from '../components/Forms/EducationForm';
@@ -8,8 +9,8 @@ import ProjectForm from '../components/Forms/ProjectForm';
 import SkillForm from '../components/Forms/SkillForm';
 import WorkExperienceForm from '../components/Forms/WorkExperienceForm';
 
-const User = () => {
-  const { user, isAuthenticated, isLoading, logout } = useAuth0();
+const User1 = () => {
+  const { user, isAuthenticated, isLoading, logout, getAccessTokenSilently } = useAuth0();
 
   const [resumeData, setResumeData] = useState({
     basicInfo: {},
@@ -20,40 +21,60 @@ const User = () => {
     workExperience: {}
   });
 
+  // ✅ Securely fetch resume data from backend
+  const fetchResume = async () => {
+    try {
+      const token = await getAccessTokenSilently();
+      const res = await axios.get('https://skillsync-yv17.onrender.com/api/resume/me', {
+        headers: {
+          Authorization: `Bearer ${token}`
+        }
+      });
+
+      setResumeData({
+        basicInfo: res.data.basicInfo || {},
+        achievements: res.data.achievements || {},
+        education: res.data.education || {},
+        projects: res.data.projects || {},
+        skills: res.data.skills || { skills: [] },
+        workExperience: res.data.workExperience || {}
+      });
+    } catch (error) {
+      console.error('Failed to fetch resume:', error);
+      setResumeData({
+        basicInfo: {},
+        achievements: {},
+        education: {},
+        projects: {},
+        skills: { skills: [] },
+        workExperience: {}
+      });
+    }
+  };
+
   useEffect(() => {
     if (isAuthenticated && user) {
-      axios.get(`https://skillsync-yv17.onrender.com/api/resume/${user.sub}`)
-        .then((res) => {
-          setResumeData({
-            basicInfo: res.data.basicInfo || {},
-            achievements: res.data.achievements || {},
-            education: res.data.education || {},
-            projects: res.data.projects || {},
-            skills: res.data.skills || { skills: [] },
-            workExperience: res.data.workExperience || {}
-          });
-        })
-        .catch(() => {
-          setResumeData({
-            basicInfo: {},
-            achievements: {},
-            education: {},
-            projects: {},
-            skills: { skills: [] },
-            workExperience: {}
-          });
-        });
+      fetchResume();
     }
   }, [user, isAuthenticated]);
 
-  const handleSave = (section, data) => {
-    axios.post('https://skillsync-yv17.onrender.com/api/resume/save', {
-      userId: user.sub,
-      section,
-      data,
-    }).then(() => {
+  // ✅ Securely save data to backend
+  const handleSave = async (section, data) => {
+    try {
+      const token = await getAccessTokenSilently();
+      await axios.post('https://skillsync-yv17.onrender.com/api/resume/save', {
+        section,
+        data
+      }, {
+        headers: {
+          Authorization: `Bearer ${token}`
+        }
+      });
       alert(`${section} saved successfully!`);
-    });
+    } catch (error) {
+      console.error('Failed to save:', error);
+      alert(`Failed to save ${section}.`);
+    }
   };
 
   if (isLoading) return <p>Loading...</p>;
@@ -65,32 +86,26 @@ const User = () => {
         data={resumeData.basicInfo}
         onSave={(data) => handleSave('basicInfo', data)}
       />
-
       <AchievementForm
         data={resumeData.achievements}
         onSave={(data) => handleSave('achievements', data)}
       />
-
       <EducationForm
         data={resumeData.education}
         onSave={(data) => handleSave('education', data)}
       />
-
       <ProjectForm
         data={resumeData.projects}
         onSave={(data) => handleSave('projects', data)}
       />
-
       <SkillForm
         data={resumeData.skills?.skills || []}
         onSave={(data) => handleSave('skills', data)}
       />
-
       <WorkExperienceForm
         data={resumeData.workExperience}
         onSave={(data) => handleSave('workExperience', data)}
       />
-
       <button onClick={() => logout({ returnTo: window.location.origin })}>
         Logout
       </button>
@@ -98,4 +113,4 @@ const User = () => {
   );
 };
 
-export default User;
+export default User1;

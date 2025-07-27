@@ -52,6 +52,7 @@ app.use('/api/', skillRoutes )
 
 app.use('/api', outputRoutes); 
 app.use('/api/resume', resumeRoutes);
+
 const PORT = process.env.PORT || 5000;
 app.listen(PORT, () => {
     console.log(`Server running on port ${PORT}`);
