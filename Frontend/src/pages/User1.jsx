@@ -12,7 +12,6 @@ import ProjectForm from '../components/Forms/ProjectForm';
 import SkillForm from '../components/Forms/SkillForm';
 import WorkExperienceForm from '../components/Forms/WorkExperienceForm';
 import ResumeForm from '../components/ResumeForm'; 
-import styles from '../components/Editor.module.css';
 
 const User1 = () => {
   const { user, isAuthenticated, isLoading: isAuthLoading, getAccessTokenSilently } = useAuth0();
@@ -70,16 +69,16 @@ const User1 = () => {
 
   return (
     <>
-      {/* Embedded styles for the editor tabs */}
+      {/* FIX: Styles are now more specific to avoid any conflicts */}
       <style>{`
-        .${styles.heading} {
+        .user1-editor-heading {
           display: flex;
           gap: 20px;
           border-bottom: 2px solid #e2e8f0;
           padding-bottom: 10px;
           margin-bottom: 20px;
         }
-        .${styles.section} {
+        .user1-editor-section {
           padding: 10px 15px;
           cursor: pointer;
           font-weight: 500;
@@ -87,11 +86,11 @@ const User1 = () => {
           border-radius: 8px;
           transition: background-color 0.3s ease, color 0.3s ease;
         }
-        .${styles.section}:hover {
+        .user1-editor-section:hover {
           background-color: #edf2f7;
           color: #2d3748;
         }
-        .${styles.active} {
+        .user1-editor-section.active {
           background-color: #319795; /* Teal color to match theme */
           color: white !important;
           font-weight: 600;
@@ -101,11 +100,11 @@ const User1 = () => {
 
       <div style={{ display: 'flex', gap: '20px', padding: '20px' }}>
         {/* Left side: The Editor */}
-        <div className={styles.container} style={{ flex: 1 }}>
-          <div className={styles.heading}>
+        <div style={{ flex: 1 }}>
+          <div className="user1-editor-heading">
             {Object.entries(sections).map(([key, value]) => (
               <div 
-                className={`${styles.section} ${selectedSection === key ? styles.active : ""}`} 
+                className={`user1-editor-section ${selectedSection === key ? "active" : ""}`} 
                 key={key} 
                 onClick={() => setSelectedSection(key)}
               >
@@ -114,7 +113,7 @@ const User1 = () => {
             ))}
           </div>
           
-          <div className={styles.formdata}>
+          <div>
             {selectedSection === 'basicInfo' && <BasicInfoForm data={resumeData.basicInfo} onSave={(data) => handleSave('basicInfo', data)} />}
             {selectedSection === 'workExp' && <WorkExperienceForm data={resumeData.workExperience} onSave={(data) => handleSave('workExperience', data)} />}
             {selectedSection === 'project' && <ProjectForm data={resumeData.projects} onSave={(data) => handleSave('projects', data)} />}
@@ -123,7 +122,6 @@ const User1 = () => {
             {selectedSection === 'achievement' && <AchievementForm data={resumeData.achievements} onSave={(data) => handleSave('achievements', data)} />}
           </div>
 
-          {/* Download Button - Placed below the forms for easy access */}
           <div style={{ marginTop: '30px', textAlign: 'center' }}>
             <button
               onClick={handleDownloadPdf}
@@ -150,7 +148,6 @@ const User1 = () => {
 
         {/* Right side: The Resume Preview */}
         <div 
-          className={styles.template} 
           style={{ 
             flex: 1, 
             border: '1px solid #ccc', 
@@ -162,7 +159,6 @@ const User1 = () => {
           {isResumeLoading ? (
             <p>Loading Resume...</p>
           ) : (
-            // Added an ID here for the PDF generator to target
             <div id="resume-preview-content">
               <ResumeForm 
                 basicInfo={resumeData.basicInfo} 
